@@ -7,119 +7,91 @@ using namespace std;
 
 int main() {
 
-    int tMaximo;
-    bool addNum = true;
-    int indice = 1;
-    int numero;
-    char opcao;
     int menu = 0;
+    int numero, posNum;
+    char opcao;
+    ListaEncadeada* lista = new ListaEncadeada();
 
-    cout << "Criação da lista vazia\n\n";
-    cout << "Tamanho máximo da linha: ";
-    cin >> tMaximo;
-
-    ListaSequencial* listaseq = new ListaSequencial(tMaximo);
-
-    while(addNum){
-        cout << "Adicione um número na posição " << indice << ": ";
+    // Adicionando elementos à lista para realizar testes
+    do {
+        cout << "Adicione um número à lista: ";
         cin >> numero;
-        if(listaseq->inserirElementoPorPosicao(indice, numero)){
-            cout << "Adicionar mais numeros? [S] - SIM ou [N] - NÃO: ";
-            cin >> opcao;
-            indice++;
-            if(opcao == 'N' || opcao == 'n'){
-                addNum = false;
-                break;
-            }
-        }else{
-            cout << "Você passou do tamanho máximo permitido pelo array\n\n";
+        cout << "Deseja adicionar mais números? [S/N]: ";
+        cin >> opcao;
+
+        if (!lista->insereFimLista(numero)) {
+            cout << "Erro ao adicionar o número!" << endl;
+        }
+
+        if (opcao == 'N' || opcao == 'n') {
             break;
         }
-        
-    }
+
+    } while (true);
 
     do {
-        cout << "MENU DE OPERAÇÕES\n\n";
-        cout << "1. Listar os valores da lista\n";
-        cout << "2. Verificar se a lista está vazia\n";
-        cout << "3. Verificar se a lista está cheia\n";
-        cout << "4. Obter o tamanho da lista\n";
-        cout << "5. Obter/modificar o valor do elemento de uma determinada posição na lista\n";
-        cout << "6. Inserir um elemento em uma determinada posição\n";
-        cout << "7. Retirar um elemento de uma determinada posição\n";
+        cout << "\nMENU DE OPERAÇÕES\n";
+        cout << "1. Verificar se a lista está vazia\n";
+        cout << "2. Obter o tamanho da lista\n";
+        cout << "3. Obter/modificar o valor do elemento de uma posição\n";
+        cout << "4. Inserir um elemento em uma determinada posição\n";
+        cout << "5. Retirar um elemento de uma determinada posição\n";
+        cout << "6. Imprimir os elementos de toda a lista\n";
+        cout << "0. Finalizar programa\n";
         cout << "\nSelecione uma opção: ";
         cin >> menu;
 
-        if(menu == 1){
-            system("clear");
-            cout << endl;
-            listaseq->exibirValores();
-            cout << endl;
-        }
-
-        if(menu == 2){
-            system("clear");
-            if(listaseq->vazia()){
-                cout << "\nLista vazia! \n\n";
-            }else{
-                cout << "\nA lista não está vazia! \n\n";
+        if (menu == 1) {
+            if (lista->vazia()) {
+                cout << "A lista está vazia!" << endl;
+            } else {
+                cout << "A lista não está vazia!" << endl;
             }
         }
-
-        if(menu == 3){
-            system("clear");
-            if(listaseq->cheia()){
-                cout << "\nLista cheia! \n\n";
-            }else{
-                cout << "\nA lista não está cheia! \n\n";
-            }
+        
+        else if (menu == 2) {
+            cout << "O tamanho da lista é: " << lista->tamanho << endl;
         }
-
-        if(menu == 4){
-            system("clear");
-            cout << "\nO tamanho atual da lista é: " << listaseq->tamanhoDaLista() << endl << endl;
-        }
-
-        if(menu == 5){
-            int posNum;
-            system("clear");
-            cout << "\nDeseja obter o elemento de qual posição? ";
+        
+        else if (menu == 3) {
+            cout << "Digite a posição do valor que deseja obter: ";
             cin >> posNum;
-            if(listaseq->obterValor(posNum)==-1){
-                cout << "Posição inválida!\n\n";
-            }else{
-                cout << "O valor da posição indicada é: " << listaseq->obterValor(posNum) << "\n\n";
+            if (lista->obterValorPosicao(posNum) == -1) {
+                cout << "Posição inválida!" << endl;
+            } else {
+                cout << "Valor na posição " << posNum << ": " << lista->obterValorPosicao(posNum) << endl;
             }
         }
-
-        if(menu == 6){
-            int posNum;
+        
+        else if (menu == 4) {
             int novoValor;
-            system("clear");
-            cout << "\nDeseja inserir o valor em qual posição? ";
+            cout << "Digite a posição para inserir o valor: ";
             cin >> posNum;
-            cout << "\nQual será o novo valor? ";
+            cout << "Digite o novo valor: ";
             cin >> novoValor;
-            if(listaseq->inserirElementoPorPosicao(posNum, novoValor)){
-                cout << "Valor inserido com sucesso!\n\n";
-            }else{
-                cout << "Houve algum erro!\n\n";
+            if (lista->insere(posNum, novoValor)) {
+                cout << "Valor inserido com sucesso!" << endl;
+            } else {
+                cout << "Erro ao inserir valor!" << endl;
             }
         }
-
-        if(menu == 7){
-            int posNum;
-            system("clear");
-            cout << "\nDeseja remover o valor de qual posição? ";
+        
+        else if (menu == 5) {
+            cout << "Digite a posição do valor a remover: ";
             cin >> posNum;
-            if(listaseq->removerElementoPorPosicao(posNum)!=-1){
-                cout << "O valor removido foi: " << listaseq->removerElementoPorPosicao(posNum) << "\n\n";
-            }else{
-                cout << "Houve algum erro ao remover valor!\n\n";
+            if (lista->remove(posNum) != -1) {
+                cout << "Valor removido com sucesso!" << endl;
+            } else {
+                cout << "Erro ao remover valor!" << endl;
             }
         }
 
-    } while(menu != 0);
+        else if (menu == 6) {
+            lista->exibirValores();
+        }
+
+    } while (menu != 0);
 
     return 0;
+
 }
