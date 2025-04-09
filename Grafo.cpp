@@ -1,4 +1,6 @@
 #include <iostream>
+#include <queue>
+#include <vector>
 using namespace std;
 
 #include "ListaAdjacencia.cpp"
@@ -40,6 +42,52 @@ public:
     ~Grafo() {
         delete[] lista;
         delete matriz;
+    }
+
+    // Função para chamar a Busca em Largura
+    void bfs(int origem, int destino) {
+        vector<bool> visitado(nVertices, false);
+        vector<int> pred(nVertices, -1);
+        queue<int> fila;
+
+        visitado[origem] = true;
+        fila.push(origem);
+
+        while (!fila.empty()) {
+            int atual = fila.front();
+            fila.pop();
+
+            No* vizinho = lista[atual].cabeca;
+            while (vizinho != nullptr) {
+                int v = vizinho->getIndice();
+                if (!visitado[v]) {
+                    visitado[v] = true;
+                    pred[v] = atual;
+                    fila.push(v);
+                }
+                vizinho = vizinho->getProximo();
+            }
+        }
+
+        // Reconstruir o caminho
+        if (!visitado[destino]) {
+            cout << "Não há caminho entre os vértices " << origem << " e " << destino << "." << endl;
+            return;
+        }
+
+        // Caminho encontrado: reconstruir usando pred
+        vector<int> caminho;
+        for (int v = destino; v != -1; v = pred[v]) {
+            caminho.push_back(v);
+        }
+
+        // Imprimir o caminho na ordem correta
+        cout << "Caminho de " << origem << " até " << destino << ": ";
+        for (int i = caminho.size() - 1; i >= 0; i--) {
+            cout << caminho[i];
+            if (i > 0) cout << " -> ";
+        }
+        cout << endl;
     }
 
 };

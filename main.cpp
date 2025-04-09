@@ -8,6 +8,7 @@ using namespace std;
 
 #include "Grafo.cpp"
 
+// Função para carregar dos arquivos
 Grafo carregar(const string& fileName) {
     ifstream file(fileName);
     if (!file.is_open()) {
@@ -60,6 +61,23 @@ int main() {
             system("clear");
             Grafo g = carregar("pcv4.txt");
             g.exibir();
+            int op;
+            do{
+                cout << "1. Busca em Largura\n";
+                cout << "2. Busca em Profundidade\n";
+                cout << "0. Sair\n";
+                cin >> op;
+                if(op==1){
+                    int origem, destino;
+                    cout << "Digite o vértice de origem: ";
+                    cin >> origem;
+                    cout << "Digite o vértice de destino: ";
+                    cin >> destino;
+                    g.bfs(origem, destino);
+                }else if(op==2){
+
+                }
+            }while(op!= 0);
         }
 
         else if (menu == 2){
