@@ -1,85 +1,83 @@
 #include <stdio.h>
 #include <iostream>
-
-#include "Fila.cpp"
+#include <fstream>
+#include <string>
+#include <sstream>
 
 using namespace std;
+
+#include "Grafo.cpp"
+
+Grafo carregar(const string& fileName) {
+    ifstream file(fileName);
+    if (!file.is_open()) {
+        cerr << "Erro ao abrir o arquivo!" << endl;
+        exit(1);
+    }
+
+    string line;
+    getline(file, line); // Insere o valor da primeira linha a variável line
+    int n = stoi(line); // Converte o valor dessa linha para um inteiro e atribui a variável que irá determinar o número de vértices
+    Grafo g(n); //Inicializa um grafo com n vértices
+
+    int l = 0;
+    // Loop para pegar todas as linhas após a primeira
+    while (getline(file, line) && l < n) {
+        stringstream ss(line);
+        string token;
+        int c = 0;
+
+        while (getline(ss, token, '\t') && c < n) {
+            int valor = stoi(token);
+            if (valor != 0 && c < n && l < n) {
+                if (c > l) {
+                    g.adicionarAresta(l, c, valor);
+                }
+            }
+            c++;
+        }
+        l++;
+    }
+
+    return g;
+}
 
 int main() {
 
     int menu = 0;
-    FilaSequencial* filaSeq = new FilaSequencial();
-    bool nFila = false; // APENAS PARA SIMULAR QUE É NECESSÁRIO CRIAR UMA FILA VAZIA
 
     do {
-        cout << "\nMENU DE OPERAÇÕES\n";
-        cout << "1. Criar fila vazia\n";
-        cout << "2. Testar se a fila está vazia\n";
-        cout << "3. Verificar se a fila está cheia\n";
-        cout << "4. Obter o tamanho da fila\n";
-        cout << "5. Consultar o elemento da frente da fila\n";
-        cout << "6. Inserir um novo elemento no fundo da fila\n";
-        cout << "7. Remover o elemento da frente da fila\n";
+        cout << "\nMENU DE TESTES\n";
+        cout << "1. Abrir arquivo pcv4\n";
+        cout << "2. Abrir arquivo pcv10\n";
+        cout << "3. Abrir arquivo pcv50\n";
+        cout << "4. Abrir arquivo pcv177\n";
         cout << "0. Finalizar programa\n";
         cout << "\nSelecione uma opção: ";
         cin >> menu;
 
         if (menu == 1) {
             system("clear");
-            cout << "Fila vazia criada com sucesso!" << endl;
-            nFila = true;
-        }
-        
-        else if (menu == 2 && nFila) {
-            system("clear");
-            if(filaSeq->vazia()){
-                cout << "A fila está vazia" << endl;
-            }else{
-                cout << "A fila não está vazia" << endl;
-            }
-        }
-        
-        else if (menu == 3 && nFila) {
-            system("clear");
-            if(filaSeq->cheia()){
-                cout << "A fila está cheia" << endl;
-            }else{
-                cout << "A fila não está cheia" << endl;
-            }
-        }
-        
-        else if (menu == 4 && nFila) {
-            system("clear");
-            cout << "O tamanho da fila é: " << filaSeq->getTamanho() << endl;
-        }
-        
-        else if (menu == 5 && nFila) {
-            system("clear");
-            if(filaSeq->vazia()){
-                cout << "A fila está vazia" << endl;
-            }else {
-                cout << "O elemento que se encontra no início da fila é " << filaSeq->primeiro() << endl;
-            }
+            Grafo g = carregar("pcv4.txt");
+            g.exibir();
         }
 
-        else if (menu == 6 && nFila) {
+        else if (menu == 2){
             system("clear");
-           cout << "Adiciona um valor no fim da fila: ";
-           int valor;
-           cin >> valor;
-           filaSeq->insere(valor);
-           cout << "O valor " << valor << " foi inserido ao fim da lista com sucesso!" << endl;
+            Grafo g = carregar("pcv10.txt");
+            g.exibir();
         }
 
-        else if (menu == 7 && nFila) {
+        else if (menu == 3){
             system("clear");
-            cout << "O valor " << filaSeq->primeiro() << " foi removido com sucesso!" << endl;
-            filaSeq->remove();
+            Grafo g = carregar("pcv50.txt");
+            g.exibir();
         }
 
-        else if (!nFila){
+        else if (menu == 4){
             system("clear");
-            cout << "Você precisa criar uma fila primeiro" << endl;
+            Grafo g = carregar("pcv177.txt");
+            g.exibir();
         }
 
         else {
